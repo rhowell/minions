@@ -1,4 +1,6 @@
+require 'spec_helper_lite'
 require './lib/minions/mailbox'
+require './lib/minions/postmaster'
 require 'timecop'
 
 describe Minions::Mailbox do
@@ -49,5 +51,13 @@ describe Minions::Mailbox do
     Timecop.return
 
     expect(subject.read[:time_stamp]).to eql new_time
+  end
+
+  it 'shall assign a unique id to each mailbox' do
+    expect(Minions::Mailbox.new.id).to_not eql Minions::Mailbox.new.id
+  end
+
+  it 'will automatically register itself with the postmaster' do
+    expect(Minions::PostMaster.mailbox(subject.id)).not_to be_nil
   end
 end

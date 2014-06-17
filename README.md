@@ -1,12 +1,12 @@
 Minions
----
+===
 You're busy, too busy.  There are always so many enemies to vanquish and planets to conquer.  What a future emperor of the universe like you needs is minions.  Minions are great! They do what you ask without question, and if they get killed in the line of duty? Meh!  There's always another one ready to take its place, in loyal service to you.
 
 Minions is a Ruby gem for actor based systems.  This is my take on a distributed system compatible with MRI, Rubinius, & JRuby implementations.
 
 
 The Plan
-===
+---
 
 Minions will be an ambitious undertaking, with lots of complex, moving parts.  I'm planning to tackle this in phases, with solid test coverage along the way.
 
