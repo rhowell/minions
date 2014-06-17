@@ -1,3 +1,4 @@
+require 'minions/postmaster'
 require 'securerandom'
 
 class Minions::Mailbox
