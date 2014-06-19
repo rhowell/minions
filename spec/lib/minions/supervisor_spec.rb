@@ -30,7 +30,7 @@ describe Minions::Supervisor do
 	end
 
 	context 'When a minion dies' do
-		it 'will replace the minion, giving it the same workload' do
+		it 'will report its failure' do
 			minion = StupidMinion.new
 			subject.add(minion)
 
