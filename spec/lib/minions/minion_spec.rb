@@ -1,5 +1,6 @@
 require 'spec_helper_lite'
 require './lib/minions/minion'
+require './lib/minions/supervisor'
 
 class NoSetupMinion < Minions::Minion
   def perform
@@ -11,6 +12,9 @@ class NoArgMinion < Minions::Minion
   end
 
   def perform
+  end
+
+  def teardown
   end
 end
 
@@ -33,18 +37,37 @@ end
 describe Minions::Minion do
   context 'when creating a new minion' do
     it 'will raise an exception if the minion class does not implement perform' do
-      expect { Minions::Minion.new }.to raise_error('Minions must implement perform')
+      expect { subject.receive(nil) }.to raise_error('Minions must implement perform')
     end
+  end
+
+  context 'when receiving a message' do
+    subject { NoArgMinion.new }
 
     it 'will automatically call the setup method' do
-      minion = NoArgMinion.new
-      expect(minion).to receive(:setup)
+      expect(subject).to receive(:setup)
 
-      minion.send(:local_init, {})
+      subject.receive({})
     end
 
     it 'will not call setup if not defined' do
-      expect { NoSetupMinion.new }.not_to raise_error
+      expect { subject.receive(nil) }.not_to raise_error
+    end
+
+    it 'will automatically call the perform method' do
+      expect(subject).to receive(:perform)
+
+      subject.receive({})
+    end
+
+    it 'will automatically call the teardown method' do
+      expect(subject).to receive(:teardown)
+
+      subject.receive({})
+    end
+
+    it 'will not call teardown if not defined' do
+      expect { subject.receive(nil) }.not_to raise_error
     end
 
     it 'will call setup with one argument if thats how its defined' do
@@ -52,7 +75,7 @@ describe Minions::Minion do
       minion = OneArgMinion.new(params)
       expect(minion).to receive(:setup).with(5)
 
-      minion.send(:local_init, params)
+      minion.receive(params)
     end
 
     it 'will call setup with two arguments if thats how its defined' do
@@ -61,13 +84,12 @@ describe Minions::Minion do
 
       expect(minion).to receive(:setup).with(5, 8)
 
-      minion.send(:local_init, params)
+      minion.receive(params)
     end
   end
 
   it 'will assign a new, empty mailbox to a new worker' do
-    minion = NoArgMinion.new
-    expect(minion.mailbox.size).to eql 0
+    expect(subject.mailbox.size).to eql 0
   end
 
   context 'when replacing a minion' do
